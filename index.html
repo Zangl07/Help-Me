@@ -14,10 +14,10 @@
     
     <script type="text/processing">
 
-      import processing.sound.*;
+      //import processing.sound.*;
 
       PImage bg, bg2, forward, top, bottom, dog, overlay;
-      SoundFile news, crash, woof, music;
+      //SoundFile news, crash, woof, music;
       int bgx, ky, vky, score, highscore, speed;
       int[] px, py, dx, dy;
       boolean gamestate;
@@ -29,12 +29,12 @@
         size(1800,600);
         a = createFont("MS-UIGothic-48.vlw", 100);
         textFont(a);
-        woof = new SoundFile(this, "woof.wav");
-        crash = new SoundFile(this, "crash.wav");
-        news = new SoundFile(this, "news.wav");
-        music = new SoundFile(this, "music.wav");
-        music.loop();
-        news.play(1, 1);
+        //woof = new SoundFile(this, "woof.wav");
+        //crash = new SoundFile(this, "crash.wav");
+        //news = new SoundFile(this, "news.wav");
+        //music = new SoundFile(this, "music.wav");
+        //music.loop();
+        //news.play(1, 1);
         bg = loadImage("highway.jpg");
         bg2 = loadImage("highway2.jpg");
         forward = loadImage("getaway.png");
@@ -120,12 +120,12 @@
         vky++;
         if(ky > height-forward.height)
         {
-          crash.play();
+          //crash.play();
           gamestate = false;
         }
         if(ky < 0)
         {
-          crash.play();
+          //crash.play();
           gamestate = false;
         }
       }
@@ -189,12 +189,12 @@
         {
           if(px[i] < 75 + forward.width && px[i] > 25 && ky - py[i] > 100)
           {
-            crash.play();
+            //crash.play();
             gamestate = false;
           }
           if(px[i] < 75 + forward.width && px[i] > 25 && py[i] - ky > 100)
           {
-            crash.play();
+            //crash.play();
             gamestate = false;
           }
         }
@@ -208,7 +208,7 @@
           {
             dx[i] = width + 50;
             dy[i] = int(random(100, height-100));
-            woof.play();
+            //woof.play();
             score = score + 2;
             speed++;
           }
