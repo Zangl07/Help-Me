@@ -14,62 +14,271 @@
     
     <script type="text/processing">
 
-      //SAMPLE PROCESSING CODE -- ENDS LINE 71
-      Ball[] ball;
+      import processing.sound.*;
 
-      void setup(){
-        size(700, 600);
-        frameRate(100);
-        ball = new Ball[100];
-        for(int i = 0; i < ball.length; i++){
-            ball[i] = new Ball();
+      PImage bg, bg2, forward, top, bottom, dog, overlay;
+      SoundFile news, crash, woof, music;
+      int bgx, ky, vky, score, highscore, speed;
+      int[] px, py, dx, dy;
+      boolean gamestate;
+      PFont a;
+      button restart;
+      
+      void setup()
+      {
+        size(1800,600);
+        a = createFont("MS-UIGothic-48.vlw", 100);
+        textFont(a);
+        woof = new SoundFile(this, "woof.wav");
+        crash = new SoundFile(this, "crash.wav");
+        news = new SoundFile(this, "news.wav");
+        music = new SoundFile(this, "music.wav");
+        music.loop();
+        news.play(1, 1);
+        bg = loadImage("highway.jpg");
+        bg2 = loadImage("highway2.jpg");
+        forward = loadImage("getaway.png");
+        forward.resize(175,75);
+        top = loadImage("blockadetop.png");
+        top.resize(100, 600);
+        bottom = loadImage("blockadebot.png");
+        bottom.resize(100, 600);
+        dog = loadImage("dog.png");
+        dog.resize(75, 75);
+        overlay = loadImage("overlay.png");
+        overlay.resize(1800, 600);
+        restart = new button(700, 100, 400, 400, "Restart 'Chase'?", 0, 0, 0);
+        highscore = 0;
+        reset();
+      }
+      
+      void reset()
+      {
+        px = new int[3];
+        py = new int[px.length];
+        for(int i = 0; i < px.length; i++)
+        {
+         px[i] = width + width/3*i;
+         py[i] = int(random(200, height-200));
+        }
+        
+        dx = new int[1];
+        dy = new int[dx.length];
+        for(int i = 0; i < dx.length; i++)
+        {
+         dx[i] = width + width/3*i;
+         dy[i] = int(random(200, height-200));
+        }
+        
+        speed = 3;
+        score = 0;
+        ky = 300;
+        vky = 0;
+        gamestate = true;
+      }
+      
+      void draw()
+      {
+        if(gamestate)
+        {
+          setBG();
+          image(overlay, 0, 0);
+          setpipes();
+          setdog();
+          collect();
+          car();
+          tally();
+          checkcrash();
+        }
+        else
+        {
+          fill(255);
+          textSize(50);
+          textAlign(CENTER, CENTER);
+          text("Arrested!", width/2, 50);
+          
+          fill(255);
+          text("Highscore: " + highscore, width/2 ,550);
+          restart.update();
+          restart.render();
+          if(highscore < score)
+          {
+            highscore =  score;
+          }
+          
+          if(restart.isClicked())
+          {
+            reset();
+          }
         }
       }
-
-
-
-      void draw(){
-          background(155,0,0);
-            for(int i = 0; i < ball.length; i++){
-                ball[i].display();
-            }
-
+      
+      void car()
+      {
+        image(forward, 50, ky);
+        ky += vky;
+        vky++;
+        if(ky > height-forward.height)
+        {
+          crash.play();
+          gamestate = false;
+        }
+        if(ky < 0)
+        {
+          crash.play();
+          gamestate = false;
+        }
       }
-      class Ball{
-
-          float x;
-          float y;
-          float Vx;
-          float Vy;
-          float r,g,b,o;
-          float d;
-
-          Ball(){
-              x = random(width);
-              y = random(height);
-              Vx = random(-5,5);
-              Vy = random(-5,5);
-              r = random(255);
-              g = random(255);
-              b = random(255);
-              o = random(255);
-              d = random(30) + 15;
+      
+      void mouseClicked(){
+        vky = -15;
+      }
+      
+      void setBG(){
+        image(bg, bgx, 0);
+        image(bg2, bgx + bg.width, 0);
+        image(bg, bgx+2*bg.width, 0);
+        bgx -= 1;
+        if(bgx <= -bg.width){
+          bgx += bg.width; 
+        }
+      }
+      
+      void setpipes()
+      {
+         for(int i = 0; i < px.length; i++)
+         {
+           px[i] = px[i] - speed;
+           image(top, px[i] - 25, py[i] - top.height-100);
+           image(bottom, px[i] - 25, py[i] + 100);
+           if(px[i] < -50)
+           {
+            px[i] = width + 50;
+            py[i] = int(random(100, height-100));
+           }
+         }
+      }
+      
+      void setdog()
+      {
+         for(int i = 0; i < dx.length; i++)
+         {
+           dx[i] -= speed;
+           
+           for (int j = 0; j < px.length; j++)
+           {
+             if (Math.abs(dx[i] - px[j]) < 10)
+             {
+               dy[i] = py[j];
+             }
+           }
+      
+           image(dog, dx[i] - 25, dy[i]);
+      
+           if (dx[i] < -50)
+           {
+             dx[i] = width + 50;
+             dy[i] = py[int(random(px.length))];
+           }
+         }
+      }
+      
+      void checkcrash()
+      {
+        for(int i = 0; i < px.length; i++)
+        {
+          if(px[i] < 75 + forward.width && px[i] > 25 && ky - py[i] > 100)
+          {
+            crash.play();
+            gamestate = false;
           }
-
-          void display(){
-              fill(r,g,b,o);
-              ellipse(x,y,d,d);
-              x += Vx;
-              y += Vy;
-              if(x > width || x < 0){
-                  Vx *= -1;
-              }
-              if(y > height || y < 0){
-                  Vy *= -1;
-              }
+          if(px[i] < 75 + forward.width && px[i] > 25 && py[i] - ky > 100)
+          {
+            crash.play();
+            gamestate = false;
           }
-    }  //END SAMPLE CODE
-
+        }
+      }
+      
+      void collect()
+      {
+        for(int i = 0; i < dx.length; i++)
+        {
+          if (dx[i] < 75 + forward.width && dx[i] + dog.width > 75 && dy[i] < ky + forward.height && dy[i] + dog.height > ky)
+          {
+            dx[i] = width + 50;
+            dy[i] = int(random(100, height-100));
+            woof.play();
+            score = score + 2;
+            speed++;
+          }
+        }
+      }
+      
+      void tally()
+      {
+        fill(255);
+        textSize(50);
+        textAlign(LEFT, TOP);
+        text("Score: " + score, 75, 50);
+        
+        for(int i = 0; i < px.length; i++)
+        {
+          if(px[i] + 25 < 75 && px[i] + 25 + speed >= 75)
+          {
+            score++;
+          }
+        }
+      }
+      class button
+      {
+        PVector pos = new PVector(0,0);
+        float width = 0;
+        float height = 0;
+        color paint;
+        String text;
+        boolean pressed = false;
+        boolean clicked = false;
+        
+        button(int x, int y, int w, int h, String t, int r, int g, int b)
+        {
+          pos.x = x;
+          pos.y = y;
+          width = w;
+          height = h;
+          paint = color(r,g,b);
+          text = t;
+        }
+        
+        void update()
+        {
+          if(mousePressed == true && mouseButton == LEFT && pressed == false)
+          {
+            pressed = true;
+            if(mouseX>= pos.x && mouseX <= pos.x+width && mouseY >= pos.y && mouseY <= pos.y+height)
+            {
+              clicked = true;
+            }
+          }  else
+          {
+            clicked = false;
+            pressed = false;
+          }
+        }
+        
+        void render()
+        {
+          fill(paint);
+          rect(pos.x, pos.y, width, height);
+          fill(255);
+          textAlign(CENTER, CENTER);
+          text(text, pos.x+(width/2), pos.y+(height/2));
+        }
+        boolean isClicked()
+        {
+          return clicked;
+        }
+      }
       
     </script>
     <canvas id="sketch" style="border: 1px solid black;"></canvas>
