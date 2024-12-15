@@ -3,19 +3,22 @@
 <html>
 
   <head>
-      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      <meta charset="UTF-8">
       <title>Slow Police Chase</title>
       <script type="text/javascript" src="js/processing.js"></script>
   </head>
   
   <body>
+      <canvas id="sketch" style="border: 1px solid black;"></canvas>
+    
     <h1>Slow Police Chase</h1>
     <p>Inspired by a real chase in LA (Does not condone animal cruelty, I see how it looks. The dog is just getting stolen.)</p>
     
     <script type="text/processing">
 
       //import processing.sound.*;
-
+      const canvas = document.getElementById("sketch");
+      const sketchCode = ';
       PImage bg, bg2, forward, top, bottom, dog, overlay;
       //SoundFile news, crash, woof, music;
       int bgx, ky, vky, score, highscore, speed;
@@ -231,7 +234,7 @@
         PVector pos;
         float width, height;
         color paint;
-        String text;
+        String lbl;
         boolean clicked;
         
         button(int x, int y, int w, int h, String t, int r, int g, int b)
@@ -240,7 +243,7 @@
           width = w;
           height = h;
           paint = color(r,g,b);
-          text = t;
+          lbl = t;
           clicked = false;
         }
         
@@ -266,17 +269,15 @@
           fill(255);
           textSize(50);
           textAlign(CENTER, CENTER);
-          text(text, pos.x+(width/2), pos.y+(height/2));
+          text(lbl, pos.x+(width/2), pos.y+(height/2));
         }
         boolean isClicked()
         {
           return clicked;
         }
       }
-      
-    </script>
-    <canvas id="sketch" style="border: 1px solid black;"></canvas>
-    
+      ';
+      new Processing(canvas, sketchCode);
+    </script> 
   </body>
-  
 </html>
