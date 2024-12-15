@@ -228,37 +228,33 @@
 
       class button
       {
-        PVector pos = new PVector(0,0);
-        float width = 0;
-        float height = 0;
+        PVector pos;
+        float width, height;
         color paint;
         String text;
-        boolean pressed = false;
-        boolean clicked = false;
+        boolean clicked;
         
         button(int x, int y, int w, int h, String t, int r, int g, int b)
         {
-          pos.x = x;
-          pos.y = y;
+          pos = new PVector(x,y);
           width = w;
           height = h;
           paint = color(r,g,b);
           text = t;
+          clicked = false;
         }
         
         void update()
         {
-          if(mousePressed == true && mouseButton == LEFT && pressed == false)
+          if(mousePressed && mouseButton == LEFT)
           {
-            pressed = true;
-            if(mouseX>= pos.x && mouseX <= pos.x+width && mouseY >= pos.y && mouseY <= pos.y+height)
+            if(mouseX >= pos.x && mouseX <= pos.x+width && mouseY >= pos.y && mouseY <= pos.y+height)
             {
               clicked = true;
             }
           }  else
           {
             clicked = false;
-            pressed = false;
           }
         }
         
@@ -266,7 +262,7 @@
         {
           fill(paint);
           rect(pos.x, pos.y, width, height);
-          fill(255);
+          fill(0);
           textAlign(CENTER, CENTER);
           text(text, pos.x+(width/2), pos.y+(height/2));
         }
