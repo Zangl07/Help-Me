@@ -1,4 +1,4 @@
-let bg, bg2, forward, top, bottom, dog, overlay;
+let bg, bg2, forward, ceiling, bottom, dog, overlay;
 let news, crash, woof, music;
 let bgx, ky, vky, score, highscore, speed;
 let px, py, dx, dy;
@@ -19,7 +19,7 @@ function preload() {
     bg = loadImage("highway.jpg");
     bg2 = loadImage("highway2.jpg");
     forward = loadImage("getaway.png");
-    top = loadImage("blockadetop.png");
+    ceiling = loadImage("blockadetop.png");
     bottom = loadImage("blockadebot.png");
     dog = loadImage("dog.png");
     overlay = loadImage("overlay.png");
@@ -103,7 +103,7 @@ function setBG() {
 function setpipes() {
     for (let i = 0; i < px.length; i++) {
         px[i] = px[i] - speed;
-        image(top, px[i] - 25, py[i] - top.height - 100);
+        image(ceiling, px[i] - 25, py[i] - ceiling.height - 100);
         image(bottom, px[i] - 25, py[i] + 100);
         if (px[i] < -50) {
             px[i] = width + 50;
