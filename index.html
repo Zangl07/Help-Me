@@ -3,22 +3,18 @@
 <html>
 
   <head>
-      <meta charset="UTF-8">
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
       <title>Slow Police Chase</title>
       <script type="text/javascript" src="js/processing.js"></script>
   </head>
   
   <body>
-      <canvas id="sketch" style="border: 1px solid black;"></canvas>
-    
     <h1>Slow Police Chase</h1>
     <p>Inspired by a real chase in LA (Does not condone animal cruelty, I see how it looks. The dog is just getting stolen.)</p>
     
     <script type="text/processing">
 
       //import processing.sound.*;
-      const canvas = document.getElementById("sketch");
-      const sketchCode = ';
       PImage bg, bg2, forward, top, bottom, dog, overlay;
       //SoundFile news, crash, woof, music;
       int bgx, ky, vky, score, highscore, speed;
@@ -276,8 +272,7 @@
           return clicked;
         }
       }
-      ';
-      new Processing(canvas, sketchCode);
     </script> 
+    <canvas id="sketch" style="border: 1px solid black;"></canvas>
   </body>
 </html>
